@@ -3,6 +3,8 @@ package pattern.opserver.interal.subject.impl;
 import java.util.Observable;
 
 public class ProductLogInfo extends Observable {
+    // Observer, Observable is deprecated (Java 9)
+    // https://bugs.openjdk.java.net/browse/JDK-8154801
     private int clickCount;
     private int salesCount;
 
