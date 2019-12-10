@@ -28,7 +28,8 @@ public class L11_FlowableSample {
 
         // 람다표현식
         Flowable<String> flowable = Flowable.create(emitter -> {
-            String[] datas = {"Hello, World!", "안녕, RxJava!"};
+            // NullPointerException 발생 (FlowableCreate.java)
+            String[] datas = {"Hello, World!", "안녕, RxJava!", null};
 
             for (String data : datas) {
                 // 구독이 해지되면 처리를 중단한다.
