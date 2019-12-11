@@ -59,7 +59,8 @@ public class L11_FlowableSample {
                         // Subscription을 Subscriber에 보관한다.
                         this.subscription = subscription;
                         // 받을 데이터 개수를 요청한다.
-                        this.subscription.request(1L);
+//                      this.subscription.request(1L);
+                        this.subscription.request(Long.MAX_VALUE);
                     }
 
                     // 데이터를 받을 때 처리
