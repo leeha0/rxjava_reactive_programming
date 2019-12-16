@@ -23,16 +23,16 @@ Runnable task = () -> {
 * `io.reactive.functions` 패키지에 정의
 * Java8 함수형 인터페이스와 다르게 예외를 던짐
 
-| Interface | 설명 |
-| ------------- | :-----|
-| Function/Predicate | 인자를 전달받아 반환값 반환 |
-| - Function | 인자를 전달 받아 반환(제한없음) 값 리턴 |
-| - Predicate | 인자를 전달 받아 Boolean 값 리턴 |
-| BooleanSupplier | 인자 없이 반환값(Boolean) 반환 |
-| Action/Consumer | 반환값 없음 |
-| - Action | 인자 없이 받아 부가 작용 발생 |
-| - Consumer | 인자를 받아 부가 작용 발생 |
-| Concellable | 인자도 반환값도 없음 (Action과 동일하나 의미하는 바가 다름) |
+  | Interface | 설명 |
+  | ------------- | :-----|
+  | Function/Predicate | 인자를 전달받아 반환값 반환 |
+  | - Function | 인자를 전달 받아 반환(제한없음) 값 리턴 |
+  | - Predicate | 인자를 전달 받아 Boolean 값 리턴 |
+  | BooleanSupplier | 인자 없이 반환값(Boolean) 반환 |
+  | Action/Consumer | 반환값 없음 |
+  | - Action | 인자 없이 받아 부가 작용 발생 |
+  | - Consumer | 인자를 받아 부가 작용 발생 |
+  | Concellable | 인자도 반환값도 없음 (Action과 동일하나 의미하는 바가 다름) |
 
 #### 2.1.3 람다식과 익명 클래스의 차이점
 * `this`를 가르키는 대상이 다르다
