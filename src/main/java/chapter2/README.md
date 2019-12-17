@@ -160,4 +160,13 @@ public class SingleTone {
     * 교착 상태 : 서로 다른 스레드가 각각 상태의 락 객체를 소유하고자 할때 `무한 대기 상태`에 빠지는 것을 말함
   * synchronized 대상 객체가 참조형 객체일 때는 복사복을 전달
   
-  
+#### 기타
+  * 자에바에 멀티 스레드 구현시 여러 인터페이스를 활용하여 구현
+    * Task
+    * ExecutorService
+  * ExecutorService
+    * 3가지 Pool 기법 존재(CachedThreadPool)
+    * Runnable vs Callable
+  * 병렬 스트림
+    * 별렬 스트림을 사용하지 않는 것을 권장
+    * Fork-join Pool
