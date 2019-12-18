@@ -160,14 +160,78 @@ public class SingleTone {
     * 교착 상태 : 서로 다른 스레드가 각각 상태의 락 객체를 소유하고자 할때 `무한 대기 상태`에 빠지는 것을 말함
   * synchronized 대상 객체가 참조형 객체일 때는 복사복을 전달
   
+### ExecutorService
+  * 비동기모드로 Tasks를 실행하는 JDK에서 제공하는 프레임워크
+  * ExecutorService 인터페이스 제공
+  * Executors 팩토리 클래스 제공
+```java
+ExecutorService executorService = Executors.newFixedThreadPool(10);
+```
+  * 수동으로 설정값을 설정하지 않고, 생성자를 통해 간편하게 생성 가능
+```java
+ExecutorService executorService = 
+    new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILISECONDS, new LinkedBlockingQueue<Runnable>());
+```
+  * ThreadPool
+     * FixedThreadPool : 고정된 개수만큼의 멀티 스레트 Pool 생성
+     * SingleThreadPool : 싱글 스레드 Pool 생성
+     * CachedThreadPool : 필요에 따라 새로운 스레드를 생성
+     * ScheduledThreadPool : 일정한 시간에 따라 스케줄되는 스레드 Poll 생성
+  * Callable, Runnable Tasks
+    * Callable
+      * Callable Object를 리턴
+      * Task를 인자로 하고, 그에따른 결과값을 리턴
+    * Runnable
+      * 
+  * 사용 가능한 메서드
+    * execute(Runnable Task) : 실행
+    * submit(Runnable/Callable Task) : 결과를 리턴하는 실행 
+    * invokeAny(Callable Task) : 여러 Tasks를 수행하고 성공적으로 끝난 하나의 결과를 리턴
+    * invokeAll(Callable Task) : 여러 Tasks를 수행하고 Future 타입의 리스트를 리턴
+  * ExecutorService의 종료
+    * 자동으로 종료되지 않음
+    * 새로운 작업이 들어올 때까지 대기
+    * shutdown() : 모든 동작중인 스레드가 종료되고 종료됨
+    * shutdownNow() : 즉시 종료를 시도하며, 모든 동작중인 스레드가 동시에 종료되는 것은 보장되지 않음
+  * Future 
+    * Tasks 실행 결과 리턴, 상태 체크를 위한 인터페이스
+    * get() : Callable tasks의 실제 결과 리턴 
+  * ScheduledExecutorService
+    * 사전에 설정한 우선순위 및 스케줄에 의해 Tasks를 수행
+    * 
+        
+```java
+public static <T> Callable<T> callable(Runnable task, T result)
+```
+    
+```java
+// 결과 값 없이 실행
+Runnable runnableTask = () -> {
+    try {
+        TimeUnit.MILLISECONDS.sleep(300);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+};
+
+// 결과 값 리턴
+Callable<String> callableTask = () -> {
+    TineUnit.MILLISECONDS.sleep(300);
+    return "Task's execution";
+};
+```
+
+```java
+ScheduleExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+Future<String> resultFuture = executorService.schedule(callableTask, 1, TimeUnit.SECONDS);
+ 
+
+```
+
+##### Reference
+  * [Java Concurrency](https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html)
+
 #### 기타
-  * 자에바에 멀티 스레드 구현시 여러 인터페이스를 활용하여 구현
-    * Task
-    * ExecutorService
-  * ExecutorService
-    * 3가지 Pool 기법 존재(CachedThreadPool)
-    * Runnable vs Callable
   * 병렬 스트림
     * 별렬 스트림을 사용하지 않는 것을 권장
     * Fork-join Pool
-  * [Java Concurrency](https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html)
