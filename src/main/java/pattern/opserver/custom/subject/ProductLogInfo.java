@@ -1,7 +1,6 @@
-package pattern.opserver.custom.subject.impl;
+package pattern.opserver.custom.subject;
 
 import pattern.opserver.custom.observer.Observer;
-import pattern.opserver.custom.subject.Subject;
 
 import java.util.ArrayList;
 

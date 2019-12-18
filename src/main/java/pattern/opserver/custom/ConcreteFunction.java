@@ -4,13 +4,13 @@ import pattern.opserver.custom.function.Function;
 import pattern.opserver.custom.observer.Observer;
 import pattern.opserver.custom.subject.Subject;
 
-public class Function1 implements Observer, Function {
+public class ConcreteFunction implements Observer, Function {
 
     private Subject productLogInfo;
     private int clickCount;
     private int salesCount;
 
-    public Function1(Subject productLogInfo) {
+    public ConcreteFunction(Subject productLogInfo) {
         this.productLogInfo = productLogInfo;
         productLogInfo.registerObserver(this);
     }

@@ -1,23 +1,41 @@
 package pattern.opserver.interal;
 
-import pattern.opserver.interal.Function2;
-import pattern.opserver.interal.subject.impl.ProductLogInfo;
+import pattern.opserver.interal.observable.PullProductLogInfo;
+import pattern.opserver.interal.observable.PushProductLogInfo;
+import pattern.opserver.interal.observer.PullConcreteFunction;
+import pattern.opserver.interal.observer.PushConcreteFunction;
+
+import java.beans.PropertyEditor;
 
 public class Application {
     public static void main(String[] args) {
-        ProductLogInfo productLogInfo = new ProductLogInfo();
-        // Subjects : Push & Pull
-        // 1. 서브 클래스 생성
-        // 2. 자바 내장 Observer API에 맞도록 구현
-        // 3. setChanged() 메소드는 protected
-        // 4. 멀티 쓰레드 구현 불가
+        pullTypeTest();
+        pushTypeTest();
+    }
 
-        Function2 function2 = new Function2(productLogInfo);
-        // Observers
+    private static void pullTypeTest() {
+        // Observable
+        PullProductLogInfo pullProductLogInfo = new PullProductLogInfo();
 
-        productLogInfo.setInfo(1, 0);
-        productLogInfo.setInfo(3, 0);
-        productLogInfo.setInfo(10, 0);
-        productLogInfo.setInfo(12, 1);
+        // Observer
+        PullConcreteFunction pullConcreteFunction = new PullConcreteFunction(pullProductLogInfo);
+
+        pullProductLogInfo.setInfo(1, 0);
+        pullProductLogInfo.setInfo(3, 0);
+        pullProductLogInfo.setInfo(10, 0);
+        pullProductLogInfo.setInfo(12, 1);
+    }
+
+    private static void pushTypeTest() {
+        // Observable
+        PushProductLogInfo pushProductLogInfo = new PushProductLogInfo();
+
+        // Observer
+        PushConcreteFunction pushConcreteFunction = new PushConcreteFunction(pushProductLogInfo);
+
+        pushProductLogInfo.setInfo(1, 0);
+        pushProductLogInfo.setInfo(3, 0);
+        pushProductLogInfo.setInfo(10, 0);
+        pushProductLogInfo.setInfo(12, 1);
     }
 }

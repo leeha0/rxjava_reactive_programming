@@ -1,13 +1,13 @@
 package pattern.opserver.custom;
 
-import pattern.opserver.custom.subject.impl.ProductLogInfo;
+import pattern.opserver.custom.subject.ProductLogInfo;
 
 public class Application {
     public static void main(String[] args) {
         ProductLogInfo productLogInfo = new ProductLogInfo();
         // Subjects : Push
 
-        Function1 function1 = new Function1(productLogInfo);
+        ConcreteFunction function1 = new ConcreteFunction(productLogInfo);
         // Observers
 
         productLogInfo.setInfo(1, 0);
