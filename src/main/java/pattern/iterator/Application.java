@@ -9,8 +9,14 @@ public class Application {
         List<String> list = Arrays.asList("a", "b", "c");
         Iterator iterator = new ConcreteIterator(list, 0);
 
+        java.util.Iterator iterator1 = new JavaConcreteIterator(list, 0);
+
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
+        }
+
+        while (iterator1.hasNext()) {
+            System.out.println(iterator1.next());
         }
     }
 }

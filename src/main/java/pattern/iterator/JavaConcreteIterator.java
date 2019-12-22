@@ -27,4 +27,15 @@ public class JavaConcreteIterator implements Iterator {
         position = position + 1;
         return item;
     }
+
+    @Override
+    public void remove() {
+        if (position <= 0) {
+            throw new IllegalStateException("next()를 한 번도 호출하지 않은 상태에서는 삭제할 수 없습니다.");
+        }
+
+        if (items.get(position - 1) != null) {
+            items.remove(position - 1);
+        }
+    }
 }

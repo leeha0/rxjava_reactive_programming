@@ -8,6 +8,10 @@ public class Counter {
         count++;
     }
 
+    public synchronized void syncIncrement() {
+        count ++;
+    }
+
     public int get() {
         return count;
     }
