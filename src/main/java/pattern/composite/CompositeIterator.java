@@ -16,11 +16,11 @@ public class CompositeIterator implements Iterator {
             return false;
         } else {
             Iterator iterator = (Iterator) stack.peek();
-            if (!iterator.hasNext()) {
+            if (iterator.hasNext()) {
+                return true;
+            } else {
                 stack.pop();
                 return hasNext();
-            } else {
-                return true;
             }
         }
     }
@@ -29,7 +29,7 @@ public class CompositeIterator implements Iterator {
     public Object next() {
         if (hasNext()) {
             Iterator iterator = (Iterator) stack.peek();
-            Component component = (Component) iterator.next();
+            Component component = (Component) iterator.next(); // Composite, Leaf
             if (component instanceof Composite) {
                 stack.push(((Composite) component).createIterator());
             }
