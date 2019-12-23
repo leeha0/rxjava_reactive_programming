@@ -18,12 +18,12 @@ public class Application {
         composite2.add(new Leaf("잎1"));
         composite3.add(new Leaf("잎1"));
 
-//        allComposite.print();
+        allComposite.print();
 
-        Iterator iterator = allComposite.createIterator();
+        Iterator iterator = allComposite.createIterator(); // 노드1, 노드2, 노드3
         while (iterator.hasNext()) {
-            Composite composite = (Composite) iterator.next();
-            composite.print();
+            Component component = (Component) iterator.next();
+            component.print();
         }
     }
 }
