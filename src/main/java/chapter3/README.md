@@ -113,3 +113,8 @@
 * 여러 소비자가 공유 객체에 접근할 때는 순차적으로 데이터에 접근하지 못하는 이슈
 * 여러 Flowable/Obserable을 하나의 Flowable/Observable로 결합하여 순차적으로 공유 객체에 접근하도록 함
 * merge 메서드 제공
+
+> Ajax vs React
+> * Ajax : Reload 없이 웹 페이지를 refresh하기 위한 기술
+> * React : 동적으로 페이지를 업데이트 하기 위한 자바스크립트 라이브러리로 Javascript Interaction 이나 Ajax에 의해 계산 된 컴포넌트를 페이지에 업데이트 (Ajax를 이용하여 페이지 업데이트)
+> * Mustache & Handlebars : ReactJS와 약간의 차이가 있으며, 주 목적은 페이지에 보여질 컴포넌트 템플릿을 생성하는 것 (Ajax를 이용하여 데이터를 가져옴)
