@@ -52,15 +52,14 @@
 | just | 메인 스레드 |
 | from | 메인 스레드 | 
 | timer | 메인 스레드와는 다른 스레드 |
-| interval | 메인 스레드와는 다른 스레드 | 
-? timer, interval default 스케줄러 
+| interval | 메인 스레드와는 다른 스레드 |   
 
 * 생산자가 처리 실행 스레드와, 데이터를 받는 측의 스레드를 모두 관리
 
 | 메서드 | 설명 |
 | :-----: | :----- |
 | subscribeOn | 생산자 스레드 종류 설정 |
-| observeOn | 소비자 스레드 종류를 설정 |
+| observeOn | 데이터를 처리하는 스레드 종류를 설정 |
 
 ##### 스케줄러
 * 스케줄러(Scheduler)는 RxJava에서 제공하는 스레드를 관리하는 클래스
@@ -75,7 +74,7 @@
 | single | 싱글 스레드 생성 |
 | newThread | 매번 새로운 스레드 생성 | 
 | from(Executor executor) | 지정한 Executor가 생성한 스레드로 처리 | 
-| trampoline | 현재 스레드의 큐(Queue)dp 처리 작업을 넣는 스케줄러 |
+| trampoline | 현재 스레드의 큐(Queue)에 처리 작업을 넣는 스케줄러 |
 
 ##### subscribeOn 메서드
 * 생산자의 처리 작업을 어떤 스케줄러에서 실행할지 설정하는 메서드

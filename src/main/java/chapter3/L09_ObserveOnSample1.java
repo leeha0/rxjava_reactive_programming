@@ -13,6 +13,7 @@ public class L09_ObserveOnSample1 {
                         // 300밀리초마다 0부터 시작하는 데이터를 통지하는 Flowable을 생성한다.
                         .interval(300L, TimeUnit.MILLISECONDS)
                         // BackpressureMode.DROP을 설정했을 때와 마찬가지로 작동한다.
+//                        .onBackpressureBuffer();
                         .onBackpressureDrop();
 
         flowable
