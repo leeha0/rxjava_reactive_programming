@@ -120,8 +120,8 @@
 > * Mustache & Handlebars : ReactJS와 약간의 차이가 있으며, 주 목적은 페이지에 보여질 컴포넌트 템플릿을 생성하는 것 (Ajax를 이용하여 데이터를 가져옴)
 
 > Callable vs Runnable  
-> * Callable : 
-> * Runnable : 
+> * Callable : Exception이 발생하며, Return 값이 존재 (Runnable의 확장형 개념, Java 1.5+)
+> * Runnable : Exception이 발생하지 않으며, Return 값이 존재하지 않음 (Java 1.0+)
 
 ### 3.3 에러처리
 * 소비자(Subscriber/Observer)에게 에러 통지하기
