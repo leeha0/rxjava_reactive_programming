@@ -118,3 +118,113 @@
 > * Ajax : Reload 없이 웹 페이지를 refresh하기 위한 기술
 > * React : 동적으로 페이지를 업데이트 하기 위한 자바스크립트 라이브러리로 Javascript Interaction 이나 Ajax에 의해 계산 된 컴포넌트를 페이지에 업데이트 (Ajax를 이용하여 페이지 업데이트)
 > * Mustache & Handlebars : ReactJS와 약간의 차이가 있으며, 주 목적은 페이지에 보여질 컴포넌트 템플릿을 생성하는 것 (Ajax를 이용하여 데이터를 가져옴)
+
+> Callable vs Runnable  
+> * Callable : 
+> * Runnable : 
+
+### 3.3 에러처리
+* 소비자(Subscriber/Observer)에게 에러 통지하기
+* 처리 작업 재시도(retry)
+* 대체 데이터 통지
+
+#### 3.3.1 소비자에게 에러 통지하기
+* 데이터 통지 처리 중 에러가 발생하면 소비자에게 에러를 통지
+* 기본적으로 스택 트레이스를 출력하도록 처리됨
+
+#### 3.3.2 처리 재시도
+* 에러가 발생하면 재시도 하여 에러 처리 하는 방법
+* 순간적인 에러로 회복 가능성이 있는 상황에서 사용
+* retry, retryUntil, retryWhen 메서드 등 제공
+
+| 연산자 | 설명 |
+|:-----: | :----- |
+| retry | 재시도 횟수, 재시도 여부를 판단하는 함수형 인터페이스를 인자로 재시도 (true의 경우 재시도) |
+| retryUntil | 재시도 여부를 판단하는 함수형 인터페이스를 인자로 재시도 (false의 경우 재시도) |
+| retryWhen | 재시도를 위한 Flowable/Observable을 생성하는 함수형 인터페이스를 인자로 재시도 |
+
+#### 3.3.3 대체 데이터 통지
+* 에러가 발생하면 대체 데이터를 통지하고 완료 처리 하는 방법
+* 에러가 발생한 이후 데이터는 통지되지 않음
+* onErrorReturnItem, onErrorResumeNext, onExceptionResumeNext 메서드 등 제공
+
+| 연산자 | 설명 | 
+|:-----: | :----- |
+| onErrorReturnItem, onErrorReturn | 애러를 통지하지 않고 대체 데이터 통지 |
+| onErrorResumeNext | 에러를 통지하지 않고 Flowable/Observable을 생성하여 데이터 통지 |
+| onExceptionResumeNext | Exception 발생시 에러를 통지하지 않 Flowable/Observable을 생성하여 데이터 통지 |
+
+### 3.4 리소스 관리
+* 구독시 리소스 생성
+* 완료, 에러가 통지시 리소스를 해제
+
+#### 3.4.1 using 메서드
+* 리소스 라이프사이클에 맞춘 Flowable/Observable을 생성
+* 리소스 관리는 Flowable/Observable 내부에서 관리
+* 세가지 함수형 인터페이스를 인자로 사용
+  * Callable : 리소스 얻기
+  * Function : 리소스에서 얻은 데이터를 사용하는 Flowable/Observable 생성
+  * Consumer : 리소스 해제
+
+#### 3.4.2 FlowableEmitter/ObservableEmitter
+* create 메서드 내부의 FlowableEmitter/ObservableEmitter 객체도 리소스 해제 지원
+* setCancellable, setDisposable 메서드 제공
+
+##### setCancellable
+* 완료, 에러 통지 및 구독 해지시 cancel 메서드 실행
+* 내부적으로 setDisposable 메서드를 호출 (Disposable로 감싸서 구현)
+```java
+emitter.setCancellable(() -> resource.close());
+```
+
+##### setDisposable
+* 완료, 에러 통지 및 구독 해지시 dispose 메서드 실행
+
+> 리소스 관리의 주의할 점 !   
+> * 구독 중도 해지시 이미 파기한 리소스에 접근하면 에러 발생, 리소스 파기 여부 확인 로직 필요
+> * setCancellable, setDisposable 중복 설정시 리소스 파기가 중복하여 수행됨
+
+### 3.5 배압
+* 데이터 통지량을 제어하는 기능
+* `Reactive Streams`에서 필수 기능
+* Reactive Streams를 강제하는 Flowable에서 제공 (Observable은 미제공)
+* 통지 속도보다 처리 속도가 느릴때 배압이 필요
+* `BackpressureStrategy`에 설정
+
+#### 3.5.1 request 메서드
+* 통지할 데이터 개수를 요청할 때 사용
+* `1 ~ Long.MAX_VALUE` 값 설정 (Long.MAX_VALUE는 무제한을 의미)
+* 데이터 처리 속도에 맞춰서 통지 진행
+
+#### 3.5.2 observeOn 메서드와 배압
+* 생산자/소비자의 통지/처리 속도 차이 발생시 스케줄 설정 가능
+* 생산자의 스케줄러 설정하여 새로운 Flowable 생성
+* scheduler, delayError, bufferSize(Default 128) 인자 사용
+* 소비자는 `Long.MAX_VALUE` 지정 권장
+
+#### 3.5.3 MissingBackpressureException
+* 버퍼에 쌓인 데이터가 임계치를 넘으면 MissingBackpressureException 발생
+
+##### BackpressureStrategy
+* 통지를 기다리는 데이터를 다루는 배압 전략을 나타냄
+* create 메서드의 두번째 인자로 설정
+
+| 종류 | 설명 | 
+|:-----:|:-----|
+|BUFFER|모든 데이터를 버퍼에 쌓음|
+|DROP|새로 생성한 데이터는 파기|
+|LATEST|최신 데이터만 버퍼에 쌓음|
+|ERROR|버퍼 크기를 넘기면 MissingBackpressureException 에러 통지|
+|NONE|특정 전략을 설정하지 않으며, onBackpressure 메서드로 배압 설정|
+
+#### 3.5.4 메서드로 통지할 데이터양 제어하기
+* 통지 데이터 제어 (filter 등)
+* 통지 횟수를 제어
+
+##### 스로틀링
+* 지정된 기간 조건에 맞는 데이터만 통지하는 메서드
+
+##### buffer 메서드와 window 메서드
+* 데이터를 모아서 통지 (통지 빈도 및 처리 횟수를 제한하여 효율적 운영 가능)
+  * buffer 메서드 : 데이터를 컬렉션에 저장한 후 통지하는 메서드
+  * window 메서드 : Flowable/Observable에 데이터를 모아 통지하는 메서드
