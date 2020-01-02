@@ -52,7 +52,7 @@
 #### 4.2.7 toMap
 #### 4.2.8 toMultimap
 
-### 4.3 통지 데이터를 제한하는 연산자
+### 4.3 통지 데이터를 제한하는 연산자 (~1/7)
 #### 4.3.1 filter
 #### 4.3.2 distinct
 #### 4.3.3 distinctUntilChanged
@@ -69,7 +69,7 @@
 #### 4.3.14 throttleWithTimeout/debounce
 #### 4.3.15 elementAt/elementAtOrError
 
-### 4.4 Flowable/Observable을 결합하는 연산자
+### 4.4 Flowable/Observable을 결합하는 연산자 (~1/9)
 #### 4.4.1 merge/mergeDelayError/mergeArray/mergeArrayDelayError/mergeWith
 #### 4.4.2 concat/concatDelayError/concatArray/concatArrayDelayError/concatWith
 #### 4.4.3 concatEager/concatArrayEager
@@ -77,7 +77,7 @@
 #### 4.4.5 zip/zipWith
 #### 4.4.6 combineLatest/combineLatestDelayError
 
-### 4.5 Flowable/Observable 상태를 통지하는 연산자
+### 4.5 Flowable/Observable 상태를 통지하는 연산자 (~1/14)
 #### 4.5.1 isEmpty
 #### 4.5.2 contains
 #### 4.5.3 all

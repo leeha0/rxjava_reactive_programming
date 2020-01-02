@@ -1,4 +1,4 @@
-package chapter4;
+package chapter4.section1;
 
 import io.reactivex.rxjava3.core.Flowable;
 

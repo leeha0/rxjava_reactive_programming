@@ -1,5 +1,6 @@
-package chapter4;
+package chapter4.section2;
 
+import chapter4.DebugSubscriber;
 import io.reactivex.rxjava3.core.Flowable;
 
 public class MapSample {

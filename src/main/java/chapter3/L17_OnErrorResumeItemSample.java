@@ -12,6 +12,7 @@ public class L17_OnErrorResumeItemSample {
                 .onErrorReturnItem(0)
                 // 구독한다.
                 .subscribe(new DisposableSubscriber<Integer>() {
+                    // DisposableSubscriber onSubscribe가 이미 구현되어 있음
                     @Override
                     public void onNext(Integer data) {
                         System.out.println("data=" + data);
