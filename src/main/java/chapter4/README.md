@@ -456,9 +456,9 @@ new Predicate<Long>() {
 * 범위는 데이터 개수나 경과 시간으로 설정
 
 > skip(long count)
-> * count : 통지 제외 데이터 개
+> * count : 통지 제외 데이터 개수
 >
-> skip(long time, TimeUnit unit)수
+> skip(long time, TimeUnit unit)
 > * time : 통지 제외 기간
 > * unit : 통지 제외 기간의 단위
 
@@ -553,13 +553,166 @@ new Function<String, Publisher<Long>>() {
 > elementAtOrError(long index)
 > * index : 지정한 위치, 데이터가 없으면 NoSuchElementException 에러를 통지하는 Single 반환
 
-### 4.4 Flowable/Observable을 결합하는 연산자 (~1/9)
+### 4.4 Flowable/Observable을 결합하는 연산자
 #### 4.4.1 merge/mergeDelayError/mergeArray/mergeArrayDelayError/mergeWith
+* 여러 개의 Flowable/Observable을 하나로 병합하고 동시 실행
+* 결과를 통지할 때는 동기화돼 순차적으로 통지됨
+* 모든 Flowable/Observable이 완료될 때 완료를 통지
+* 최대 네 개까지 인자를 전달 가능
+
+##### 관련 연산자
+* mergeWith : 자신의 통지와 인자 Flowable/Observable의 통지를 병합
+* mergeDelayError : 에러 발생시 다른 Flowable/Observable의 데이터를 모두 통지하고 나서 에러를 통지
+* mergeArray : 배열을 인자로 받아 하나로 병합
+* mergeArrayDelayError : 배열을 인자로 받아 하나로 병합하며, 에러 발생시 다른 Flowable/Observable의 데이터를 모두 통지하고 나서 에러를 통지
+
+> merge(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2)
+> * source1, source2 : 병합되는 Flowable/Observable로 최대 4개까지 설정 가능
+> 
+> merge(Iterable<? extends Publisher/ObservableSource<? extends T>> sources)
+> * sources : 병합된 Flowable/Observable을 저장하는 Iterable이나 Flowable/Observable
+> 
+> merge(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources)
+
+> mergeArray(Publisher/ObservableSource<? extends T>... sources)
+> * sources : 병합되는 Flowable/Observable의 배열, 쉼표로 구분해 지정
+
+> mergeDelayError(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2)
+> mergeDelayError(Iterable<? extends Publisher/ObservableSource<? extends T>> sources)
+> mergeDelayError(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources)
+
+> mergeWith(Publisher/ObservableSource<? extends T> other)
+> * other : 병합되는 Flowable/Observable
+
 #### 4.4.2 concat/concatDelayError/concatArray/concatArrayDelayError/concatWith
+* 여러 개의 Flowable/Observable을 하나씩 실행
+* 하나의 Flowable/Observable로 결합한 후에 순차적으로 실행하는 연산자
+* 최대 네 개까지 인자를 전달 가능
+
+##### 관련 연산자
+* concatDelayError : 에러 발생시 다른 Flowable/Observable의 처리가 완료될 때까지 에러 통지 대기
+* concatArray : 배열을 인자로 받아 결합
+* concatArrayDelayError : 배열을 인자로 받아 결합하며, 에러 발생시 Flowable/Observable의 데이터를 모두 통지하고 나서 에러를 통지
+
+> concat(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2)
+> * source1, source2 : 병합되는 Flowable/Observable로 최대 4개까지 설정 가능
+> 
+> concat(Iterable<? extends Publisher/ObservableSource<? extends T>> sources)
+> * sources : 병합된 Flowable/Observable을 저장하는 Iterable이나 Flowable/Observable
+>
+> concat(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources)
+
+> concatDelayError(Iterable<? extends Publisher/ObservableSource<? extends T>> sources)
+> concatDelayError(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources)
+
+> concatArray(Publisher/ObservableSource<? extends T>... sources)
+> * sources : 결합하는 Flowable/Observable의 배열, 쉼표로 구분해 지정
+
+> concatArrayDelayError(Publisher/ObservableSource<? extends T>... sources)
+
+> concatWith(Publisher/ObservableSource<? extends T> other)
+> * 결합하는 Flowable/Observable
+
 #### 4.4.3 concatEager/concatArrayEager
+* 여러 개의 Flowable/Observable을 결합해 동시 실행하고 한 건씩 통지
+* concat 메서드와 달리 한꺼번에 Flowable/Observable을 실행하며, 캐시에 데이터를 쌓아두고 순서대로 통지
+
+> concatEager(Iterable<? extends Publisher/ObservableSource<? extends T>> sources)
+> * sources : 병합된 Flowable/Observable을 저장하는 Iterable이나 Flowable/Observable
+>
+> concatEager(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources)
+
+> concatArrayEager(Publisher/ObservableSource<? extends T>... sources)
+> * sources : 결합하는 Flowable/Observable의 배열, 쉼표로 구분해 지정
+
 #### 4.4.4 startWith/startWithArray
+* 인자의 데이터를 통지한 후 자신의 데이터 통지
+
+> startWith(Publisher/ObservableSource<? extends T> other)
+> * other : 원본 Flowable/Observable이 통지하기 전에 먼저 통지되는 Flowable/Observable
+>
+> startWith(Iterable<? extends T> items)
+> * items : 원본 Flowable/Observable이 통지하기 전에 먼저 통지되는 데이터의 Iterable
+>
+> startWith(T value)
+> * value : 원본 Flowable/Observable이 통지하기 전에 먼저 통지되는 한 건의 데이터
+
+> startWithArray(T... items)
+> * items : 원본 Flowable/Observable이 통지하기 전에 먼저 통지되는 데이터 배열, 쉼표로 구분해 지정
+
 #### 4.4.5 zip/zipWith
+* 여러 Flowable/Observable의 데이터를 모아 새로운 데이터를 생성 통지
+* 데이터들이 모인 시점에 이 데이터들을 함수형 인터페이스에 전달하고, 새로 생성한 데이터를 결과로 통지
+* 완료 통지 시점은 가장 통지 데이터가 가장 적은 Flowable/Observable에 맞추어짐
+* 각 Flowable/Observable은 동일한 순서로 통지, 통지 순서에 대한 차이 발생시 가장 느린 속도에 맞춤
+
+> zip(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2, BiFunction<? super T1, ? super T2, ? extends R> zipper)
+> * source1, source2 : 새로운 데이터를 생성하려고 결합하는 Flowable/Observable로, 최대 9개까지 지정 가능
+> * zipper : 새로운 데이터를 생성하는 함수형 인터페이스 (Function3, Function4 인터페이스도 사용 가능)
+> 
+> zip(Iterable<? extends Publisher/ObservableSource<? extends T>> sources, Function<? super Object[], ? extends R> zipper)
+> * sources : 새로운 데이터를 생성하려고 결합하는 Flowable/Observable을 저장하는 Iterator이나 Flowable/Observable
+> * zipper : 인자의 각 Flowable/Observable로부터 데이터를 배열로 받아 새로운 데이터를 생성하는 함수형 인터페이스
+>
+> zip(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources, Function<? super Object[], ? extends R> zipper)
+
+```java
+// 각 Flowable/Observable이 통지한 데이터를 저장하는 리스트를 생성한다.
+new BiFunction<Long, Long, List<Long>>() {
+    @Override
+    public List<Long> apply(Long data1, Long data2) throws Exception {
+        return Arrays.adList(data1, data2);
+    }
+}
+```
+
+> zipWith(Publisher/ObservableSource<? extends U> other, BiFUnction<? super T, ? super U, ? extends R> zipper)
+> * other : 새로운 데이터를 생성하고자 결합하는 Flowable/Observable
+> * zipper : 원본 Flowable/Observable이 통지하는 데이터와 인자로부터 받은 데이터에서 새로운 데이터를 생성하는 함수형 인터페이스
+>
+> zipWith(Iterable<\U> otherDatas, BiFUnction<? super T, ? super U, ? extends R> zipper)
+> * otherDatas : 새로운 데이터를 생성하는 결합 데이터를 저장하는 Iterable
+
+```java
+// 원본 통지 데이터와 인자 Flowable/Observable의 통지 데이터를 저장하는 리스트 생성
+new BiFunction<Long, Long, List<Long>>() {
+    @Override
+    public List<Long> apply(Long data1, Long data2) throws Exception {
+        return Ararys.adList(data1, data2);
+    }
+}
+```
+
 #### 4.4.6 combineLatest/combineLatestDelayError
+* 여러 Flowable/Observable에서 데이터를 받을 때마다 새로운 데이터를 생성 통지
+* 각 Flowable/Observable이 마지막으로 통지한 데이터를 받아 새로 데이터를 통지하는 연산자
+
+##### 관련 연산자
+* combineLatestDelayError : 에러 발생시 다른 Flowable/Observable의 처리가 완료될 때까지 에러 통지 대기
+
+> combineLatest(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner)
+> * source1, source2 : 새로운 데이터를 생성하려고 결합하는 Flowable/Observable, 최대 9개까지 지정 가능
+> * combiner : 새로운 데이터를 생성하는 함수형 인터페이스 (Function3, Function4 사용 가능)
+> 
+> combineLatest(Iterable<? extends Publisher/ObservableSource<? extends T>> sources, Function<? super Object[], ? extends R> combiner)
+> * sources : 새로운 데이터를 생성하고 결합하는 Flowable/Observable을 저장하는 Iterable이나 Flowable/Observable
+> * combiner : 데이터를 배열로 받아 새로운 데이터를 생성하는 함수형 인터페이스
+> 
+> combineLatest(Publisher/Observable<? extends Publisher/ObservableSource<? extends T>> sources, Function<? super Object[], ? extends R> combiner)
+
+> combineLatestDelayError(Function<? super Object[], ? extends R> combiner, Publisher/ObservableSource<? extends T>... sources)
+> combineLatestDelayError(<? extends Publisher/ObservableSource<? extends T>> sources, Function<? super Object[], ? extends R> combiner)
+> combineLatestDelayError(Publisher/Observable<? extends T>[] sources, Function<? super Object[], ? extends R> combiner)
+
+```java
+// 인자의 Flowable/Observable이 통지한 데이터를 저장하는 리스트를 생성한다.
+new BiFunction<Long long, List<Long>> {
+    @Override
+    public List<Long> apply(Long data1, data2) throws Exception {
+        return Arrays.asList(data1, data2);
+    }
+}
+```
 
 ### 4.5 Flowable/Observable 상태를 통지하는 연산자 (~1/14)
 #### 4.5.1 isEmpty
