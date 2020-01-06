@@ -49,7 +49,7 @@
 > * mapper : 받은 데이터를 어떻게 변환할지 정의하는 함수형 인터페이스
 
 ```java
-// String 데이터를 BigDecima로 변환한다.
+// String 데이터를 BigDecimal로 변환한다.
 new Function<String BigDecimal>() {
     @Override
     public BigDecimal apply(String data) throws Exception {
@@ -65,8 +65,10 @@ new Function<String BigDecimal>() {
 
 > flatMap(Function<? super T, ? extends Publisher/ObservableSource<? extends R>> mapper)
 > * mapper : 받은 데이터로 새로운 Flowable/Observable을 생성하는 방법을 정의하는 함수형 인터페이스
+>
 > flatMap(Function<? super T, ? extends Publisher/ObservableSource<? extends R>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner)
 > * combiner : mapper가 새로 생성한 Flowable/Observable 데이터와 원본 데이터를 조합해 새로운 통지 데이터를 생성하는 함수형 인터페이스
+>
 > flatMap(Function<? super T, ? extends Publisher/ObservableSource<? extends R>> onNextMapper, Function<? super Throwable, ? extends Publisher/ObservableSource<? extends R>> onErrorMapper, Callable<? extends Publisher<? extends R>> onCompleteSupplier)
 > * onNextMapper : 받은 데이터로 새로운 Flowable/Observable을 생성하는 방법을 정의하는 함수형 인터페이스
 > * onErrorMapper : 에러가 통지됐을 때 무엇을 통지할지 정의하는 함수형 인터페이스
@@ -134,6 +136,7 @@ new Callable<Publisher<? extends Integer>>() {
 
 > concatMap(Function<? super T, ? extends Publisher/ObservableSource<? extends R>> mapper)
 > * mapper : 받은 데이터로 새로운 Flowable/Observable의 생성 방법을 정의하는 함수형 인터페이스
+>
 > concatMapDelayError(Function<? super T, ? extends Publisher/ObservableSource<? extends R>> mapper)
 
 ```java
@@ -176,13 +179,17 @@ new Function<Long, Publisher<? extends  String>>() {
 
 > buffer(int count)
 > * count : 버퍼에 담을 데이터 개수
+>
 > buffer(long time, TimeUnit unit)
 > * time : 버퍼에 데이터를 담는 시간 간격
 > * unit : 버퍼에 데이터를 담는 시간 간격의 단위
-> buffer(Publisher/ObservableSource<B> boundaryIndicator)
+>
+> buffer(Publisher/ObservableSource<\B> boundaryIndicator)
 > * boundaryIndicator : 버퍼에 데이터를 담는 간격을 결정하는 데 사용하는 Flowable/Observable
-> buffer(Callable<? extends Publisher/ObservableSource<B>> boundaryIndicatorSupplier)
+>
+> buffer(Callable<? extends Publisher/ObservableSource<\B>> boundaryIndicatorSupplier)
 > * boundaryIndicatorSupplier : 호출되면 버퍼링을 시작하고 반환되는 FLowable/Observable
+> 
 > buffer(Flowable/Observable<? extends TOpening> openingIndicator, Function<? super TOpening, ? extends Publisher/ObservableSource<? extends TClosing>> closingIndicator)
 > * openingIndicator : 데이터를 통지할 때 해당 시점의 데이터를 버퍼에 쌓는 Flowable/Observable
 > * closingIndicator : 버퍼링을 시작할 때 openingIndicator가 통지한 데이터를 받으면 버퍼링을 종료하는 Flowable/Observable
@@ -211,8 +218,8 @@ new Function<Long, Flowable<Long>>() {
 * 메모리가 부족하게 될 위험성이 있으므로 사용 시 주의
 * 통지 데이터가 하나뿐이므로 Single을 반환
 
-> toList()
-> toList(Callable<U> collectionSupplier)
+> toList()  
+> toList(Callable<\U> collectionSupplier)
 > * collectionSupplier : 데이터를 담는 객체를 생성하는 함수형 인터페이스
 
 ```java
@@ -234,8 +241,10 @@ new Callable<CopyOnWriteArrayList<String>>() {
 
 > toMap(Function<? super T, ? extends K> keySelector)
 > * keySelector : 키를 생성하는 함수형 인터페이스
+> 
 > toMap(Function<? super T, ? extends K> keySelector, Function<? super T, ? extends V> valueSelector)
 > * valueSelector : 값을 생성하는 함수형 인터페이스
+> 
 > toMap(Function<? super T, ? extends K> keySelector, Function<? super T, ? extends V> valueSelector, Callable<? extends Map<K, V>> mapSupplier)
 > * mapSupplier : 키와 값을 담을 Map객체를 생성하는 함수형 인터페이스
 
@@ -274,10 +283,13 @@ new Callable<LinkedHashMap<String, Object>>() {
 
 > toMultimap(Function<? super T, ? extends K> keySelector)
 > * keySelector : 키를 생성하는 함수형 인터페이스
+>
 > toMultimap(Function<? super T, ? extends K> keySelector, Function<? super T, ? extends V> valueSelector)
 > * valueSelector : 값을 생성하는 함수형 인터페이스
+>
 > toMultimap(Function<? super T, ? extends K> keySelector, Function<? super T, ? extends V> valueSelector, Callable<? extends Map<K, Collection<V>>> mapSupplier)
 > * mapSupplier : 통지할 Map객체를 생성하는 함수형 인터페이스
+>
 > toMultimap(Function<? super T, ? extends K> keySelector, Function<? super T, ? extends V> valueSelector, Callable<? extends Map<K, Collection<V>>> mapSupplier, Function<? super K, ? extends Collection<? super V>> collectionFactory)
 > * collectionFactory : 키를 바탕으로 Map에 값으로 담을 컬렉션 객체를 생성하는 함수형 인터페이스
 
@@ -340,7 +352,7 @@ new Predicate<Long>() {
 * 이미 통지한 데이터와 같은 데이터를 제외하고 통지
 * 내부적으로 HashSet을 통해 데이터가 같은지 확인
 
-> distinct()
+> distinct()  
 > distinct(Function<? super T, K> keySelector)
 > * keySelector ; 받은 데이터와 비교할 데이터를 생성하는 함수형 인터페이스
 
@@ -356,9 +368,10 @@ new Function<String, String>() {
 #### 4.3.3 distinctUntilChanged
 * 연속된 같은 값의 데이터는 제외하고 통지
 
-> distinctUntilChanged()
+> distinctUntilChanged()  
 > distinctUntilChanged(Function<? super T, K> keySelector)
 > * keySelector : 받은 데이터와 비교할 데이터를 생성하는 함수형 인터페이스
+>
 > distinctUntilChanged(BiPredicate<? super T, ? super T> comparer)
 > * comparer : 바로 앞 데이터와 현재 데이터가 같은지를 판단하는 함수형 인터페이스
 
@@ -383,8 +396,9 @@ new BiPredicate<BigDecimal, BigDecimal>() {
 * 지정한 개수나 기간까지만 데이터를 통지
 
 > take(long count)
-> * count : 통지할 수 있는 데이터 개
-> take(long time, TimeUnit unit)수
+> * count : 통지할 수 있는 데이터 개수
+>
+> take(long time, TimeUnit unit)
 > * time : 데이터를 통지할 수 있는 기간
 > * unit : 데이터를 통지할 수 있는 기간의 단위
 
@@ -393,7 +407,8 @@ new BiPredicate<BigDecimal, BigDecimal>() {
 
 > takeUntil(Predicate<? super T> stopPredicate)
 > * stopPredicate : 받은 데이터를 판단해 통지를 끝낼 조건이 되면 ture를 반환하는 함수형 인터페이스
-> takeUntil(Publisher/ObservableSource<U> other)
+>
+> takeUntil(Publisher/ObservableSource<\U> other)
 > * other : 첫 번째 데이터의 통지 시점 또는 완료 시점에 결과로 데이터 통지를 멈추고 완료하게 하는 Flowable/Observable
 
 ```java
@@ -429,9 +444,11 @@ new Predicate<Long>() {
 
 > takeLast(int count)
 > * count : 결과로 통지하려고 끝에서부터 세는 데이터 개수
+>
 > takeLast(long time, TimeUnit unit)
 > * time : 통지할 데이터를 결정할 대상 기간
 > * unit : 통지할 데이터를 결정할 대상 기간의 단위
+>
 > takeLast(long count, long time, TimeUnit unit)
 
 #### 4.3.8 skip
@@ -440,6 +457,7 @@ new Predicate<Long>() {
 
 > skip(long count)
 > * count : 통지 제외 데이터 개
+>
 > skip(long time, TimeUnit unit)수
 > * time : 통지 제외 기간
 > * unit : 통지 제외 기간의 단위
@@ -472,6 +490,7 @@ new Predicate<Long>() {
 
 > skipLast(int count)
 > * count : 통지하지 않을 데이터 개수
+>
 > skipLast(int time, TimeUnit unit)
 > * time : 데이터를 통지하지 않을 시간
 > * unit : 데이터를 통지하지 않을 시간의 단위
@@ -492,8 +511,9 @@ new Predicate<Long>() {
 > throttleLast(long time, TimeUnit unit)
 > * time : 간견으로 지정할 시간
 > * unit : 간견으로 지정할 시간 단위
-> sample(long time, TimeUnit unit)
-> sample(Publisher/ObservableSource<U> sampler)
+>
+> sample(long time, TimeUnit unit)  
+> sample(Publisher/ObservableSource<\U> sampler)
 > * sampler : 데이터 통지 간견을 결정하는 Flowable/Observable. 이 Flowable/Observable이 통지할 때 원본 Flowable/Observable의 가장 마지막으로 받은 데이터 통지
 
 #### 4.3.14 throttleWithTimeout/debounce
@@ -503,8 +523,9 @@ new Predicate<Long>() {
 > throttleWithTimeout(long time, TimeUnit unit)
 > * time : 지정하려는 시간
 > * unit : 지정하려는 시간의 단위
-> debounce(long time, TimeUnit unit)
-> debounce(Function<? super T, ? Publisher/ObservableSource<U>> debounceIndicator)
+>
+> debounce(long time, TimeUnit unit)  
+> debounce(Function<? super T, ? Publisher/ObservableSource<\U>> debounceIndicator)
 > * debounceIndicator : 데이터를 통지하지 않고 건너뛸 시간을 결정하는 Flowable/Observable, 이 Flowable/Observable이 통지할 때까지 다른 데이터가 통지되지 않으면 먼저 받은 데이터 통지
 
 ```java
@@ -524,9 +545,11 @@ new Function<String, Publisher<Long>>() {
 
 > elementAt(long index)
 > * index : 지정한 위치, 데이터가 없으면 Maybe 반환
+>
 > elementAt(long index, T defaultItem)
 > * index : 지정한 위치
 > * defaultItem : 데이터가 없는 경우 디폴트 값 리턴, Single 반환
+>
 > elementAtOrError(long index)
 > * index : 지정한 위치, 데이터가 없으면 NoSuchElementException 에러를 통지하는 Single 반환
 
