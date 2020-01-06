@@ -9,7 +9,7 @@ public class Counter {
     }
 
     public synchronized void syncIncrement() {
-        count ++;
+        count++;
     }
 
     public int get() {

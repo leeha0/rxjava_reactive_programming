@@ -714,14 +714,71 @@ new BiFunction<Long long, List<Long>> {
 }
 ```
 
-### 4.5 Flowable/Observable 상태를 통지하는 연산자 (~1/14)
+### 4.5 Flowable/Observable 상태를 통지하는 연산자
 #### 4.5.1 isEmpty
-#### 4.5.2 contains
-#### 4.5.3 all
-#### 4.5.4 sequenceEqual
-#### 4.5.5 count
+* Flowable/Observable이 통지할 데이터가 있는지 판단
+* Single 반환
+* 완료만 통지되면 true, 데이터가 통지되면 false 통지
 
-### 4.6 Flowable/Observable 데이터를 집계하는 연산자
+> isEmpty()
+
+#### 4.5.2 contains
+* Flowable/Observable이 지정한 데이터를 포함하는지 판단
+* Single 반환
+* 지정 데이터를 포함하면 true, 지정 데이터를 포함하지 않거나 통지할 데이터가 없으면 false
+
+> contains(Object item)
+> * item : 비교 대상 데이터
+
+#### 4.5.3 all
+* Flowable/Observable의 모든 데이터가 조건에 맞는지 판단
+* Single 반환
+* 모든 데이터가 조건에 맞으면 true, 맞지 않으면 false
+* 통지 데이터가 없을 경우에도 true 반환
+
+> all(Predicate<? super T> predicate)
+> * predicate : 받은 데이터를 기반으로 판단 조건을 지정하는 함수형 인터페이스로, 구현하는 메서드는 조건이 맞으면 true, 맞지 않으면 false를 반환
+
+```java
+// 짝수 여부를 판단한다.
+new Predicate<Long>() {
+    @Override
+    public boolean test(Long data) throws Exception {
+        return data % 2 == 0;
+    }
+}
+```
+
+#### 4.5.4 sequenceEqual
+* 두 Flowable/Observable이 같은 순서로 같은 수의 같은 데이터를 통지하는지 판단
+* Single 반환
+* 데이터만 비교하고 통지 시점은 비교하지 않음
+* 모든 데이터가 동일하면 true, 그렇지 않다면 false 반환
+
+> sequenceEqual(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2)
+> * source1, source2 : 비교 대상 Flowable/Observable
+>
+> sequenceEqual(Publisher/ObservableSource<? extends T> source1, Publisher/ObservableSource<? extends T> source2, BiPredicate<? super T, ? super T> isEqual)
+> * isEqual : 각 Flowable/Observable이 통지한 같은 인덱스의 데이터를 받아 비교하고 두 데이터가 같으면 true를 반환하는 함수형 인터페이스
+
+```java
+// 크기와 상관없이 같은지 판단한다.
+new BiPredicate<BigDecimal, BigDecimal>() {
+    @Override
+    public boolean test(BigDecimal data1, BigDecimal data2) throws Exception {
+        return (data1.compareTo(data2) == 0);
+    }
+}
+```
+#### 4.5.5 count
+* Flowable/Observable의 데이터 개수 통지
+* Single 반환
+* 완료 통지 시점에 통지
+* 데이터 개수는 Long 타입
+
+> count()
+
+### 4.6 Flowable/Observable 데이터를 집계하는 연산자 (~1/14)
 #### 4.6.1 reduce/reduceWith
 #### 4.6.2 scan
 

@@ -13,10 +13,10 @@ public class L12_ConcatMapEagerSample {
         Flowable<String> flowable =
                 // 받은 데이터로 FLowable을 생성하고 이 Flowable의 데이터를 통지한다.
                 Flowable.just("A", "B", "C")
-                    .concatMapEager(data -> {
-                        // 1000밀리초 늦게 데이터를 통지하는 Flowable을 생성한다.
-                        return Flowable.just(data).delay(1000L, TimeUnit.MILLISECONDS);
-                    });
+                        .concatMapEager(data -> {
+                            // 1000밀리초 늦게 데이터를 통지하는 Flowable을 생성한다.
+                            return Flowable.just(data).delay(1000L, TimeUnit.MILLISECONDS);
+                        });
 
         // 구독한다.
         flowable.subscribe(data -> {

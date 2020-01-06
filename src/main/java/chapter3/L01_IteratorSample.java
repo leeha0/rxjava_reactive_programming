@@ -12,7 +12,7 @@ public class L01_IteratorSample {
         Iterator<String> iterator = list.iterator();
 
         // 받은 데이터가 남아있는지 확인한다.
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             // 데이터를 얻는다.
             String value = iterator.next();
 
