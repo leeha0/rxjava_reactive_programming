@@ -780,12 +780,109 @@ new BiPredicate<BigDecimal, BigDecimal>() {
 
 ### 4.6 Flowable/Observable 데이터를 집계하는 연산자 (~1/14)
 #### 4.6.1 reduce/reduceWith
+* Flowable/Observable의 데이터를 계산하고 최종 집계 결과만 통지
+* 초기값을 받을 경우 Single, 초기값이 없을 경우 Maybe를 반환
+
+```java
+// 받은 데이터를 더한다.
+new BiFunction<Integer, Integer, Integer>() {
+    // @param sum 집계값
+    // @param data Flowable/Obervable이 통지한 데이터
+    public Integer apply(Integer sum, Integer data) throws Exception {
+        // 데이터를 더한다
+        return sum + data;
+    }
+}
+```
+
 #### 4.6.2 scan
+* Flowable/Observable의 데이터를 계산하고 각 계산 결과를 통지
+* 초기 값이 있으면 초기값을 첫 번째 데이터로 통지
+
+```java
+// 받은 데이터를 더한다.
+new BiFunction<Integer, Integer, Integer>() {
+    /**
+    * @param sum 집계값
+    * @param data Flowable/Observable이 통지한 데이터
+    */
+    @Override
+    public Integer apply(Integer, sum, Integer data) throws Exception {
+        // 데이터를 더한다.
+        return sum + data;
+    }
+}
+```
 
 ### 4.7 유틸리티 연산자
 #### 4.7.1 repeat
+* 데이터 통지를 처음부터 반복
+* 인자에 0보다 작은 값을 전달하면 IllegalArgumentException 발생
+* 인자에 0 값을 전달하면 완료만 통지하는 빈 Flowable/Observable 수행
+
 #### 4.7.2 repeatUntil
+* 지정한 조건이 될 때까지 데이터 통지 반복
+* false면 통지를 반복하고 true면 완료를 통지하고 처리를 종료
+
+```java
+// 처리 시작 시각으로부터 500밀리초가 지나면 true를 반환한다.
+new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() throws Exception {
+        return System.currentTimeMillis() - startTime > 500L;
+    }
+};
+```
+
 #### 4.7.3 repeatWhen
+* 반복 처리 정의 및 통지 반복
+* 지정한 시점까지 원본 Flowable/Observable의 통지를 반복하는 연산자
+* 원본 Flowable/Observable이 완료를 통지하는 시점에 데이터를 통지하는 Flowable/Observable을 인자로 받고 이를 변환해 반환
+* 변환된 Flowable/Observable이 데이터를 통지하면 반복하고, 완료를 통지하면 완료를 통지하고 처리를 끝냄
+* 변환된 Flowable/Observable이 빈 Flowable/Observable이라면 완료를 통지하고 종료
+
+```java
+// 반복 시점을 1000밀리초 지연하고 같은 데이터를 2번 통지한다.
+new Function<Flowable<Object>, Publisher<Object>>() {
+    @Override
+    public Publisher<Object> apply(Flowalbe<Object> completeHandler) throws Exception {
+        return completeHandler
+            // 통지 시점을 늦춘다.
+            .delay(1000L, TimeUnit.MILLISECONDS)
+            // 2번 통지한다.
+            .take(2);
+    }  
+}
+```
+
 #### 4.7.4 delay
+* 처리 시작 및 데이터 통지 시점 지연
+* 구독 시작 시간은 지연 되지 않음
+
+```java
+// 받은 데이터의 값을 통지하는 시각을 지연한다.
+new Function<Long, Flowable<Long>>() {
+    @Override
+    public Flowable<Long> apply(Long data) throws Exception {
+        return Flowable.timer(data, TimeUnit.MILLISECONDS);
+    }
+}
+```
+
 #### 4.7.5 delaySubscription
+* 처리 시작 지연
+* 구독 시작 시간이 지연됨
+
 #### 4.7.6 timeout
+* 데이터 통지의 타임아웃 설정
+* 설정된 시간을 넘기면 대체 데이터를 통지하거나, TimeoutException 에러를 통지
+
+```java
+// 데이터를 받고 1000밀리초 뒤에 이 데이터를 통지하는 Flowable을 생성한다.
+new Function<Integer, Flowable<Long>>() {
+    @Override
+    public Flowable<Long> apply(Integer data) throws Exception {
+        return Flowable.timer(1000L, TimeUnit.MILLISECONDS);
+    }
+}
+```
